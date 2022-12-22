@@ -30,4 +30,31 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
+  text-align: center;
+}
+
+.img {
+  height: 300px;
+  width: 300px;
+  transition: all 0.3s ease;
+}
+img:hover {
+  transform: scale(1.2);
+}
+
+.book-card {
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
+  margin: 20px 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: black;
+  color: white;
+  border-radius: 5px;
 }
