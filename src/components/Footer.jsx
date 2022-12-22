@@ -3,7 +3,7 @@ import '../App'
 
 const Footer = () => {
   return (
-    <div>
+    <div className="footer">
       <p>Google Books App 2022&copy; </p>
     </div>
   )

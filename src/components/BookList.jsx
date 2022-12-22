@@ -2,7 +2,7 @@ import React from 'react'
 import '../App'
 
 const BookList = () => {
-  return <div>BookList</div>
+  return <div className="book-list">BookList</div>
 }
 
 export default BookList
