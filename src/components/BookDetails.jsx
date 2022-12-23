@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import '../App'
 import { useParams } from 'react-router-dom'
-import API, { BOOK_DETAILS_URL, myAPIkey } from '../API'
+import { myAPIkey } from '../services/API'
 import axios from 'axios'
 
 const BookDetails = () => {
   const [book, setBook] = useState({})
-  console.log({ book }, 'teste')
+  const [isLoading, setIsLoading] = useState(false)
 
   const { id } = useParams()
-
-  console.log({ id })
-  console.log({ myAPIkey })
 
   // useEffect(() => {
   //   API.getBookDetail(id)
@@ -29,19 +26,26 @@ const BookDetails = () => {
   //   //   .catch((err) => console.log(err))
   // }, [id])
 
-  async function fetchData() {
-    let response = await API.getBookDetail(id)
-
-    let book = await response.data
-    setBook(book)
-    console.log(book)
+  const getBooks = async () => {
+    setIsLoading(true)
+    try {
+      const res = await axios.get(`https://www.googleapis.com/books/v1/volumes/${id}?${myAPIkey}`)
+      setBook(res.data)
+    } catch (err) {
+      throw new Error(err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
-    fetchData()
-  })
+    getBooks()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  return (
+  return isLoading ? (
+    <div>Está carregando...</div>
+  ) : (
     <div className="book-details">
       <div className="book-image">
         <h2>{book?.volumeInfo.title}</h2>
