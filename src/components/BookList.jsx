@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import '../App'
-import { API_URL, myAPIkey } from '../services/API'
 import axios from 'axios'
-import { useAppContext } from '../context/appContext'
 import { useNavigate } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import { Row, Col } from 'react-bootstrap'
-import { Button, Pagination, TextField } from '@mui/material'
+import { Button, CircularProgress, Grid, TextField } from '@mui/material'
+import ReactPaginate from 'react-paginate'
+
+import '../App'
+import { API_URL, myAPIkey } from '../services/API'
+import { useAppContext } from '../context/appContext'
 
 const BookList = () => {
   const [books, setBooks] = useState([])
   const [search, setSearch] = useState('')
   const [query, setQuery] = useState('java')
 
-  const [loading, setLoading] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(6)
+  const [isLoading, setIsLoading] = useState(false)
+  const [pageNumber, setPageNumber] = useState(0)
+
+  const booksPerPage = 6
+  const pagesVisited = pageNumber * booksPerPage
 
   const { favorites, addToFavorites, removeFromFavorites } = useAppContext()
 
@@ -27,13 +31,20 @@ const BookList = () => {
     return boolean
   }
 
+  const getBooks = async () => {
+    setIsLoading(true)
+    try {
+      const res = await axios.get(API_URL)
+      setBooks(res.data.items)
+    } catch (err) {
+      throw new Error(err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
-    axios
-      .get(API_URL)
-      .then((res) => {
-        setBooks(res.data.items)
-      })
-      .catch((err) => console.log(err))
+    getBooks()
   }, [])
 
   useEffect(() => {
@@ -52,15 +63,56 @@ const BookList = () => {
       setQuery(search)
       setSearch('')
     } else {
-      alert('Procure um nome de livro!!')
+      alert('Procure o nome do livro!!')
     }
   }
 
-  const lastPostIndex = currentPage * postsPerPage
-  const firstPostIndex = lastPostIndex - postsPerPage
-  const currentPosts = books.slice(firstPostIndex, lastPostIndex)
+  const displayBooks = books.slice(pagesVisited, pagesVisited + booksPerPage).map((book) => {
+    return (
+      <div key={book?.id} className="book-card">
+        <div>
+          <h4>{book?.volumeInfo?.title}</h4>
+        </div>
+        <div>
+          <img
+            src={book?.volumeInfo?.imageLinks?.thumbnail}
+            alt="imagem"
+            onClick={() => navigate(`/livro/${book.id}`)}
+          />
+          <div>
+            {favoritesChecker(book.id) ? (
+              <button className="button-card" onClick={() => removeFromFavorites(book.id)}>
+                Remover dos Favoritos
+              </button>
+            ) : (
+              <button className="button-card" onClick={() => addToFavorites(book)}>
+                Adicionar aos Favoritos
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  })
 
-  return (
+  const pageCount = Math.ceil(books.length / booksPerPage)
+  const changePage = ({ selected }) => {
+    setPageNumber(selected)
+  }
+
+  return isLoading ? (
+    <Grid
+      container
+      sx={{
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: { xs: 'start', mds: 'center' },
+        display: 'flex',
+      }}
+    >
+      <CircularProgress />
+    </Grid>
+  ) : (
     <>
       <div>
         <Row className="styleRow">
@@ -84,43 +136,20 @@ const BookList = () => {
           </Col>
         </Row>
 
-        <div className="book-list">
-          {currentPosts.map((book) => (
-            <div key={book?.id} className="book-card">
-              <div>
-                <h4>{book?.volumeInfo?.title}</h4>
-              </div>
-              <div>
-                <img
-                  src={book?.volumeInfo?.imageLinks?.thumbnail}
-                  alt="imagem"
-                  onClick={() => navigate(`/livro/${book.id}`)}
-                />
-                <div>
-                  {favoritesChecker(book.id) ? (
-                    <button className="button-card" onClick={() => removeFromFavorites(book.id)}>
-                      Remover dos Favoritos
-                    </button>
-                  ) : (
-                    <button className="button-card" onClick={() => addToFavorites(book)}>
-                      Adicionar aos Favoritos
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="book-list">{displayBooks}</div>
 
         <Row className="styleRow">
-          <Col xs={12}>
-            <Pagination
-              totalPosts={books.length}
-              postsPerPage={postsPerPage}
-              setCurrentPage={setCurrentPage}
-              currentPage={currentPage}
-            />
-          </Col>
+          <ReactPaginate
+            previousLabel={'Previous'}
+            nextLabel={'Next'}
+            pageCount={pageCount}
+            onPageChange={changePage}
+            containerClassName={'paginationBttns'}
+            previousLinkClassName={'previousBttn'}
+            nextLinkClassName={'nextBttn'}
+            disabledClassName={'paginationDisabled'}
+            activeClassName={'paginationActive'}
+          />
         </Row>
       </div>
     </>

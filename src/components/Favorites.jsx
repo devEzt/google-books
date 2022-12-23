@@ -1,17 +1,16 @@
 import React from 'react'
-import '../App'
 import { useAppContext } from '../context/appContext'
+import '../App'
 
 const Favorites = () => {
   const { favorites, addToFavorites, removeFromFavorites } = useAppContext()
-
-  console.log('Os Favoritos:', favorites)
 
   const favoritesChecker = (id) => {
     const boolean = favorites.some((book) => book.id === id)
 
     return boolean
   }
+
   return (
     <div className="favorites">
       {favorites.length > 0 ? (
