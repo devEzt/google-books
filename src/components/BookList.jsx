@@ -2,9 +2,20 @@ import React, { useState, useEffect } from 'react'
 import '../App'
 import { API_URL } from '../API'
 import axios from 'axios'
+import { useAppContext } from './context/appContext'
 
 const BookList = () => {
   const [books, setBooks] = useState([])
+
+  const { favorites, addToFavorites, removeFromFavorites } = useAppContext()
+
+  console.log('Os Favoritos:', favorites)
+
+  const favoritesChecker = (id) => {
+    const boolean = favorites.some((book) => book.id === id)
+
+    return boolean
+  }
 
   useEffect(() => {
     axios
@@ -26,7 +37,11 @@ const BookList = () => {
           <div>
             <img src={book.volumeInfo.imageLinks.thumbnail} alt="imagem" />
             <div>
-              <button>Adicionar aos Favoritos</button>
+              {favoritesChecker(book.id) ? (
+                <button onClick={() => removeFromFavorites(book.id)}>Remover dos Favoritos</button>
+              ) : (
+                <button onClick={() => addToFavorites(book)}>Adicionar aos Favoritos</button>
+              )}
             </div>
           </div>
         </div>
