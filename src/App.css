@@ -112,3 +112,52 @@ img:hover {
   cursor: pointer;
   margin: 8px;
 }
+
+.paginationBttns {
+  width: 80%;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.paginationBttns a {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid rgb(20, 129, 211);
+  color: rgb(20, 129, 211);
+  cursor: pointer;
+}
+
+.paginationBttns a:hover {
+  color: white;
+  background-color: rgb(20, 129, 211);
+}
+
+.paginationActive a {
+  color: white;
+  background-color: rgb(20, 129, 211);
+}
+
+@media (max-width: 860px) {
+  .book-list {
+    min-height: 80vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 472px) {
+  .book-list {
+    min-height: 80vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+}
