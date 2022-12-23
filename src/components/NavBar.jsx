@@ -6,7 +6,9 @@ const NavBar = () => {
   return (
     <div className="navbar">
       <div>
-        <h1>React Google Books App</h1>
+        <Link to="/">
+          <h1>React Google Books App</h1>
+        </Link>
       </div>
       <div>
         <Link to="/favoritos">

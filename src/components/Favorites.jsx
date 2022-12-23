@@ -24,9 +24,13 @@ const Favorites = () => {
               <img src={book.volumeInfo.imageLinks.thumbnail} alt="imagem" />
               <div>
                 {favoritesChecker(book.id) ? (
-                  <button onClick={() => removeFromFavorites(book.id)}>Remover dos Favoritos</button>
+                  <button className="button-card" onClick={() => removeFromFavorites(book.id)}>
+                    Remover dos Favoritos
+                  </button>
                 ) : (
-                  <button onClick={() => addToFavorites(book)}>Adicionar aos Favoritos</button>
+                  <button className="button-card" onClick={() => addToFavorites(book)}>
+                    Adicionar aos Favoritos
+                  </button>
                 )}
               </div>
             </div>
