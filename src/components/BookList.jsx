@@ -3,13 +3,18 @@ import '../App'
 import { API_URL } from '../API'
 import axios from 'axios'
 import { useAppContext } from './context/appContext'
+import { useNavigate } from 'react-router-dom'
 
 const BookList = () => {
   const [books, setBooks] = useState([])
 
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postsPerPage, setPostsPerPage] = useState(20)
+
   const { favorites, addToFavorites, removeFromFavorites } = useAppContext()
 
-  console.log('Os Favoritos:', favorites)
+  const navigate = useNavigate()
 
   const favoritesChecker = (id) => {
     const boolean = favorites.some((book) => book.id === id)
@@ -35,7 +40,11 @@ const BookList = () => {
             <h4>{book.volumeInfo.title}</h4>
           </div>
           <div>
-            <img src={book.volumeInfo.imageLinks.thumbnail} alt="imagem" />
+            <img
+              src={book.volumeInfo.imageLinks.thumbnail}
+              alt="imagem"
+              onClick={() => navigate(`/livro/${book.id}`)}
+            />
             <div>
               {favoritesChecker(book.id) ? (
                 <button onClick={() => removeFromFavorites(book.id)}>Remover dos Favoritos</button>
