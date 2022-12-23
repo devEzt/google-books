@@ -2,7 +2,7 @@ import React from 'react'
 import '../App'
 
 const Favorites = () => {
-  return <div>Favorites</div>
+  return <div className="favorites">Favoritos</div>
 }
 
 export default Favorites
