@@ -1,6 +1,6 @@
 import React from 'react'
 import '../App'
-import { useAppContext } from './context/appContext'
+import { useAppContext } from '../context/appContext'
 
 const Favorites = () => {
   const { favorites, addToFavorites, removeFromFavorites } = useAppContext()
